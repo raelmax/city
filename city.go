@@ -3,30 +3,61 @@ package main
 import (
 	"fmt"
 	rss "github.com/jteeuwen/go-pkg-rss"
+	"github.com/spf13/viper"
 	"net/http"
+	"html/template"
 )
-
+var FeedTitle string
+var FeedList []string
 var Cache = make(map[int64]*rss.Item)
 var Index Int64Slice
 
+type Page struct {
+	Title string
+	Feed []*rss.Item
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
-	var response string
+	feed := []*rss.Item{}
 
 	for _, v := range Index {
-		item := Cache[v]
-		response += "<b>Title:</b>\n" + item.Title + "\n<b>Description:</b>\n" + item.Description + "<hr>"
+		feed = append(feed, Cache[v])
 	}
 
-	fmt.Fprintf(w, response)
+	page := Page{Title: FeedTitle, Feed: feed}
+	funcMap := template.FuncMap{
+		"html": func(value interface{}) template.HTML {
+			return template.HTML(fmt.Sprint(value))
+		},
+	}
+
+	t, _ := template.ParseFiles("feed.html")
+	t.Funcs(funcMap).Execute(w, page)
+}
+
+
+func setConfig() {
+	viper.AddConfigPath(".")
+	viper.SetConfigName("config")
+	viper.SetDefault("title", "City Feed")
+
+	err := viper.ReadInConfig() // Find and read the config file
+	if err != nil {             // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+
+	FeedTitle = viper.GetString("title")
+	FeedList = viper.GetStringSlice("feeds")
 }
 
 func main() {
+	setConfig()
+
+	for _, feed := range FeedList {
+		go PollFeed(feed, 5, nil)
+	}
+
 	fmt.Println("Serving on: http://localhost:8001/")
-
-	go PollFeed("https://raelmax.github.io/rss.xml", 5, nil)
-	go PollFeed("http://hersonls.com.br/rss", 5, nil)
-	go PollFeed("http://everson.com.br/rss.xml", 5, nil)
-
 	http.HandleFunc("/", handler)
 	http.ListenAndServe(":8001", nil)
 }
