@@ -24,11 +24,17 @@ func PollFeed(uri string, timeout int, cr xmlx.CharsetFunc) {
 
 func itemHandler(feed *rss.Feed, ch *rss.Channel, newitems []*rss.Item) {
 	for _, item := range newitems {
-		pubdata, _ := item.ParsedPubDate()
-
-		Cache[pubdata.Unix()] = item
-		Index = append(Index, pubdata.Unix())
+		pubdate, _ := item.ParsedPubDate()
+		updateCache(pubdate.Unix(), item)
 	}
+}
 
-	sort.Sort(sort.Reverse(Index))
+func updateCache(key int64, item *rss.Item) {
+	if _, ok := Cache[key]; ok {
+		updateCache(key + 1, item)
+	} else {
+		Cache[key] = item
+		Index = append(Index, key)
+		sort.Sort(sort.Reverse(Index))
+	}
 }
