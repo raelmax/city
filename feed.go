@@ -31,7 +31,7 @@ func itemHandler(feed *rss.Feed, ch *rss.Channel, newitems []*rss.Item) {
 
 func updateCache(key int64, item *rss.Item) {
 	if _, ok := Cache[key]; ok {
-		updateCache(key + 1, item)
+		updateCache(key+1, item)
 	} else {
 		Cache[key] = item
 		Index = append(Index, key)

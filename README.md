@@ -1,7 +1,7 @@
-# city
+# City
 A simple feed aggregator service
 
 ## Limitations(?)
 
-- No database
-- No history
+- Posts are lost after a restart
+- We aren't removing posts deleted from feeds

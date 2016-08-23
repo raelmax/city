@@ -49,7 +49,7 @@
         {{ range $item := .Feed }}
             <article>
                 <h2>{{ $item.Title }}</h2>
-                <div>{{ $item.Body | html }}</div>
+                <div>{{ $item.Description | html }}</div>
             </article>
         {{ end }}
         </section>

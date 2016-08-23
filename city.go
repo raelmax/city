@@ -1,12 +1,14 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	rss "github.com/jteeuwen/go-pkg-rss"
 	"github.com/spf13/viper"
-	"net/http"
 	"html/template"
+	"net/http"
 )
+
 var FeedTitle string
 var FeedList []string
 var Cache = make(map[int64]*rss.Item)
@@ -14,7 +16,7 @@ var Index Int64Slice
 
 type Page struct {
 	Title string
-	Feed []*rss.Item
+	Feed  []*rss.Item
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +37,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	t.Funcs(funcMap).Execute(w, page)
 }
 
-
 func setConfig() {
 	viper.AddConfigPath(".")
 	viper.SetConfigName("config")
@@ -51,13 +52,21 @@ func setConfig() {
 }
 
 func main() {
+	var host, port, address string
+
+	flag.StringVar(&host, "host", "localhost", "service host")
+	flag.StringVar(&port, "port", "8001", "service port")
+	flag.Parse()
+
+	address = host + ":" + port
+
 	setConfig()
 
 	for _, feed := range FeedList {
 		go PollFeed(feed, 5, nil)
 	}
 
-	fmt.Println("Serving on: http://localhost:8001/")
+	fmt.Println("Serving on " + address)
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8001", nil)
+	http.ListenAndServe(address, nil)
 }
