@@ -34,3 +34,26 @@ func TestUpdateCache(t *testing.T) {
 		t.Error("Expected base and incremented values on index")
 	}
 }
+
+func TestItemHandler(t *testing.T) {
+	fakeItem1 := &rss.Item{PubDate: "Tue, 25 Nov 2014 00:00:00 +0000"}
+	fakeItem1pubdate, _ := fakeItem1.ParsedPubDate()
+	fakeItem2 := &rss.Item{PubDate: "Tue, 25 Nov 2015 00:00:00 +0000"}
+	fakeItem2pubdate, _ := fakeItem2.ParsedPubDate()
+	fakeItem3 := &rss.Item{PubDate: "Tue, 25 Nov 2015 00:00:00 +0000"}
+	fakeItem3pubdate, _ := fakeItem3.ParsedPubDate()
+	fakeSlice := []*rss.Item{fakeItem1, fakeItem2, fakeItem3}
+	timeSlice := []int64{fakeItem3pubdate.Unix() + 1, fakeItem2pubdate.Unix(), fakeItem1pubdate.Unix()}
+
+	itemHandler(&rss.Feed{}, &rss.Channel{}, fakeSlice)
+
+	for idx, value := range timeSlice { // reversed
+		if _, ok := Cache[value]; !ok {
+			t.Error("Expected ", value, " on Cache")
+		}
+
+		if v := Index[idx]; v != value {
+			t.Error("Expected ", v, " on Index, got", value)
+		}
+	}
+}
