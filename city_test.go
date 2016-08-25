@@ -5,6 +5,12 @@ import (
 )
 
 func TestSetConfig(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
+
 	if feedLen := len(FeedList); feedLen != 0 {
 		t.Errorf("Expected 0 to feedLen, got %d", feedLen)
 	}
@@ -23,4 +29,6 @@ func TestSetConfig(t *testing.T) {
 	if FeedTitle != "Test Config Title" {
 		t.Errorf("Expected title from config yaml")
 	}
+
+	setConfig("testdata/wrong_path_config.yaml") // raises a panic
 }
