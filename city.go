@@ -37,10 +37,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	t.Funcs(funcMap).Execute(w, page)
 }
 
-func setConfig() {
-	viper.AddConfigPath(".")
-	viper.SetConfigName("config")
-	viper.SetDefault("title", "City Feed")
+func setConfig(filepath string) {
+	viper.SetConfigFile(filepath)
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file
@@ -52,15 +50,16 @@ func setConfig() {
 }
 
 func main() {
-	var host, port, address string
+	var host, port, address, filepath string
 
 	flag.StringVar(&host, "host", "localhost", "service host")
 	flag.StringVar(&port, "port", "8001", "service port")
+	flag.StringVar(&filepath, "config", "./config.yaml", "config file")
 	flag.Parse()
 
 	address = host + ":" + port
 
-	setConfig()
+	setConfig(filepath)
 
 	for _, feed := range FeedList {
 		go PollFeed(feed, 5, nil)
