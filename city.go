@@ -9,10 +9,17 @@ import (
 	"net/http"
 )
 
-var FeedTitle string
-var FeedList []string
-var Cache = make(map[int64]*rss.Item)
-var Index Int64Slice
+
+var (
+	FeedTitle string
+	FeedList []string
+	Cache = make(map[int64]*rss.Item)
+	Index Int64Slice
+
+	// command line parameters
+	port = flag.String("port", "8001", "service port")
+	filepath = flag.String("config", "./config.yaml", "config file")
+)
 
 type Page struct {
 	Title string
@@ -50,22 +57,13 @@ func setConfig(filepath string) {
 }
 
 func main() {
-	var host, port, address, filepath string
-
-	flag.StringVar(&host, "host", "localhost", "service host")
-	flag.StringVar(&port, "port", "8001", "service port")
-	flag.StringVar(&filepath, "config", "./config.yaml", "config file")
 	flag.Parse()
-
-	address = host + ":" + port
-
-	setConfig(filepath)
+	setConfig(*filepath)
 
 	for _, feed := range FeedList {
 		go PollFeed(feed, 5, nil)
 	}
 
-	fmt.Println("Serving on " + address)
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(address, nil)
+	http.ListenAndServe(":" + *port, nil)
 }

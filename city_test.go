@@ -5,7 +5,7 @@ import (
 )
 
 func TestSetConfig(t *testing.T) {
-	defer func() {
+	defer func() { // catch a panic
 		if r := recover(); r == nil {
 			t.Errorf("The code did not panic")
 		}
@@ -15,7 +15,7 @@ func TestSetConfig(t *testing.T) {
 		t.Errorf("Expected 0 to feedLen, got %d", feedLen)
 	}
 	if FeedTitle != "" {
-		t.Errorf("Expected blank string to feedTitle, got %d", FeedTitle)
+		t.Errorf("Expected blank string to feedTitle, got %s", FeedTitle)
 	}
 
 	setConfig("testdata/test_config.yaml")
