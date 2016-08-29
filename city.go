@@ -9,16 +9,16 @@ import (
 	"net/http"
 )
 
-
 var (
 	FeedTitle string
-	FeedList []string
-	Cache = make(map[int64]*rss.Item)
-	Index Int64Slice
+	FeedList  []string
+	Cache     = make(map[int64]*rss.Item)
+	Index     Int64Slice
 
 	// command line parameters
-	port = flag.String("port", "8001", "service port")
-	filepath = flag.String("config", "./config.yaml", "config file")
+	port        = flag.String("port", "8001", "service port")
+	filepath    = flag.String("config", "./config.yaml", "config file")
+	feedtimeout = flag.Int("timeout", 5, "feed timeout")
 )
 
 type Page struct {
@@ -56,14 +56,18 @@ func setConfig(filepath string) {
 	FeedList = viper.GetStringSlice("feeds")
 }
 
+func spawnFeeds() {
+	for _, feed := range FeedList {
+		go PollFeed(feed, *
+			feedtimeout, nil)
+	}
+}
+
 func main() {
 	flag.Parse()
 	setConfig(*filepath)
-
-	for _, feed := range FeedList {
-		go PollFeed(feed, 5, nil)
-	}
+	spawnFeeds()
 
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":" + *port, nil)
+	http.ListenAndServe(":"+*port, nil)
 }
