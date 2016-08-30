@@ -1,0 +1,15 @@
+{
+  "name": "City",
+  "description": "Feed aggregator service",
+  "keywords": [
+    "feed-aggregator",
+    "go",
+    "feed",
+    "service",
+    "rss"
+  ],
+  "image": "heroku/go:1.6",
+  "mount_dir": "src/github.com/raelmax/city",
+  "website": "http://github.com/raelmax/city",
+  "repository": "http://github.com/raelmax/city"
+}
