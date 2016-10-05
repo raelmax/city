@@ -1,1 +1,1 @@
-web: city -p=$PORT -config=/opt/test_data/test_config.yaml
+web: city -port=$PORT -config=./testdata/test_config.yaml

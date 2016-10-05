@@ -5,7 +5,7 @@ MAINTAINER Edward Muller <edward@heroku.com>
 WORKDIR "/opt"
 
 ADD .docker_build/city /opt/bin/city
-ADD ./test_data /opt/test_data
+ADD ./testdata /opt/testdata
 
 CMD ["/opt/bin/city"]
 
