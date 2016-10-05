@@ -20,13 +20,14 @@ Then, download the binary on [releases page](https://github.com/raelmax/city/rel
 
 Access [http://127.0.0.1:8000](http://127.0.0.1:8000) from your browser.
 
-
 ## Deploy to heroku
+
 Just fork this repository and click on this button:
 
-[deploy to heroku button]
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Development
+
 Get the _city_ source code:
 ```
 go get github.com/raelmax/city
@@ -38,7 +39,8 @@ go test
 ```
 
 ## Future
-- [ ] Deploy to heroku
+
+- [x] Deploy to heroku
 - [ ] Improve test coverage
 - [ ] Pagination
 - [ ] Posts expiration

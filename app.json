@@ -11,5 +11,10 @@
   "image": "heroku/go:1.6",
   "mount_dir": "src/github.com/raelmax/city",
   "website": "http://github.com/raelmax/city",
-  "repository": "http://github.com/raelmax/city"
+  "repository": "http://github.com/raelmax/city",
+  "buildpacks": [
+    {
+      "url": "heroku/go"
+    }
+  ]
 }
