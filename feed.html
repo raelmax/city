@@ -5,44 +5,8 @@
         <title>{{ .Title }}</title>
 
         <style>
-/*            body {
-                font-family: "Helvetica", "Arial", sans-serif;
-                max-width: 50em;
-                margin: 0 auto;
-                line-height: 1.5;
-                padding: 4em 1em;
-                color: #566b78;
-                background: #ccd0d7;
-            }
-            h1,
-            h2,
-            strong {
-                color: #333;
-            }
-            code,
-            pre {
-                background: #f5f7f9;
-                border-bottom: 1px solid #d8dee9;
-                color: #a7adba;
-            }
-            code {
-                padding: 2px 4px;
-                vertical-align: text-bottom;
-            }
-            pre {
-                border-left: 2px solid #69c;
-                padding: 1em;
-            }
-            article {
-                margin-bottom: 20px;
-                background: #fff;
-                padding: 20px;
-            }
-            article img {
-                max-width: 100%;
-            }*/
 
-body {
+        body {
                 font-family: "Helvetica", "Arial", sans-serif;
                 max-width: 70%;
                 margin: 0 auto;
@@ -112,13 +76,12 @@ body {
     color: rgb(130, 141, 157);
     cursor: default;
     height: 11px;
-    left: 293px;
     position: absolute;
     right: 13px;
     text-align: left;
     text-shadow: rgb(130, 141, 157) 0px 0px 0px;
     top: 9px;
-    width: 12px;
+    /*width: 12px;*/
     column-rule-color: rgb(130, 141, 157);
     perspective-origin: 6px 5.5px;
     transform-origin: 6px 5.5px;
@@ -221,7 +184,6 @@ body {
     float: left;
     height: 18px;
     text-align: left;
-    width: 110px;
     column-rule-color: rgb(46, 65, 92);
     perspective-origin: 60px 12.5px;
     transform-origin: 60px 12.5px;
@@ -234,12 +196,10 @@ body {
 .DIV_10 {
     color: rgb(46, 65, 92);
     height: 18px;
-    max-width: 110px;
     text-align: left;
     text-overflow: ellipsis;
     unicode-bidi: isolate;
     white-space: nowrap;
-    width: 110px;
     column-rule-color: rgb(46, 65, 92);
     perspective-origin: 55px 9px;
     transform-origin: 55px 9px;
@@ -410,10 +370,10 @@ body {
         <div class="DIV_1">
 	<div class="DIV_2">
 		<div class="DIV_3">
-			3d
+			{{ $item.PubDate }}
 		</div>
 		<div class="DIV_4">
-			 <a href="{{ (index $item.Links 0).Href }}">{{ $item.Title }}</a>
+			 <a href="{{ (index $item.Links 0) }}">{{ $item.Title }}</a>
 		</div>
 		<div class="DIV_6">
 			{{ $item.Description | html }}
@@ -421,32 +381,39 @@ body {
 	</div>
 	<div class="DIV_8">
 		<div class="DIV_9">
-			<div class="DIV_10">
-				 <a href="/feed/http%3A%2F%2Fpartner.dw.com%2Fsyndication%2Ffeeds%2FGK-Inoreader-Technology.21637-media.xml" title="Go to feed" id="A_11">DW | Technology</a>
-			</div>
+            <div class="DIV_10">
+            {{ range $category := $item.Categories }}
+
+				 <span>{{ $category }}</span>
+
+            {{ end }}
+                </div>
+			<!--<div class="DIV_10">-->
+				 <!--<a href="{{ $item.Guid }}" title="Go to feed" id="A_11">{{ $item.Guid }}</a>-->
+			<!--</div>-->
 		</div>
-		<div class="DIV_12">
-			 <span class="SPAN_13">
-                 <a href="javascript:void(0)" title="Star article (Hotkey: F)" class="A_14">
-                     <span class="SPAN_15"></span>
-                 </a>
-            </span>
-            <span class="SPAN_16">
-                <a href="javascript:void(0)" class="A_17">
-                    <span class="SPAN_18"></span>
-                </a>
-            </span>
-            <span class="SPAN_19">
-                <a class="A_20" rel="noopener" href="http://www.dw.com/en/rip-david-bowie-technologist-futurist-internet-service-provider-extraordinaire/a-18971777?maca=en-GK-Inoreader-Technology-21637-xml-media">
-                    <span class="SPAN_21"></span>
-                </a>
-            </span>
-            <span class="SPAN_22">
-                <a class="A_23" href="javascript:void(0)">
-                    <span class="SPAN_24"></span>
-                </a>
-            </span>
-		</div>
+		<!--<div class="DIV_12">-->
+			 <!--<span class="SPAN_13">-->
+                 <!--<a href="javascript:void(0)" title="Star article (Hotkey: F)" class="A_14">-->
+                     <!--<span class="SPAN_15"></span>-->
+                 <!--</a>-->
+            <!--</span>-->
+            <!--<span class="SPAN_16">-->
+                <!--<a href="javascript:void(0)" class="A_17">-->
+                    <!--<span class="SPAN_18"></span>-->
+                <!--</a>-->
+            <!--</span>-->
+            <!--<span class="SPAN_19">-->
+                <!--<a class="A_20" rel="noopener" href="http://www.dw.com/en/rip-david-bowie-technologist-futurist-internet-service-provider-extraordinaire/a-18971777?maca=en-GK-Inoreader-Technology-21637-xml-media">-->
+                    <!--<span class="SPAN_21"></span>-->
+                <!--</a>-->
+            <!--</span>-->
+            <!--<span class="SPAN_22">-->
+                <!--<a class="A_23" href="javascript:void(0)">-->
+                    <!--<span class="SPAN_24"></span>-->
+                <!--</a>-->
+            <!--</span>-->
+		<!--</div>-->
 	</div>
 </div>
         {{ end }}
