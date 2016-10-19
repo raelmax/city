@@ -5,53 +5,125 @@
         <title>{{ .Title }}</title>
 
         <style>
-            body {
-                font-family: "Helvetica", "Arial", sans-serif;
-                max-width: 50em;
-                margin: 0 auto;
-                line-height: 1.5;
-                padding: 4em 1em;
-                color: #566b78;
-                background: #ccd0d7;
-            }
-            h1,
-            h2,
-            strong {
-                color: #333;
-            }
-            code,
-            pre {
-                background: #f5f7f9;
-                border-bottom: 1px solid #d8dee9;
-                color: #a7adba;
-            }
-            code {
-                padding: 2px 4px;
-                vertical-align: text-bottom;
-            }
-            pre {
-                border-left: 2px solid #69c;
-                padding: 1em;
-            }
-            article {
-                margin-bottom: 20px;
-                background: #fff;
-                padding: 20px;
-            }
-            article img {
-                max-width: 100%;
-            }
+body {
+    font-family: "Helvetica", "Arial", sans-serif;
+    max-width: 70%;
+    margin: 0 auto;
+    line-height: 1.5;
+    padding: 4em 1em;
+    color: #566b78;
+    background: #ccd0d7;
+}
+
+.feed {
+    text-align: center;
+}
+
+.item {
+    color: rgb(46, 65, 92);
+    display: inline-block;
+    height: 350px;
+    position: relative;
+    text-align: left;
+    width: 320px;
+    background: rgb(254, 254, 254) none repeat scroll 0% 0% / auto padding-box border-box;
+    border: 1px solid rgba(46, 65, 92, 0.45098);
+    border-radius: 2px 2px 2px 2px;
+    font: normal normal normal normal 12px / normal Arial, Helvetica, sans-serif;
+    margin: 30px 8.15625px 0px;
+}
+
+.content {
+    height: 305px;
+    overflow: hidden;
+}
+
+.content__pubdate {
+    color: rgb(130, 141, 157);
+    position: absolute;
+    right: 13px;
+    top: 9px;
+    font: normal normal bold normal 10px / normal Arial, Helvetica, sans-serif;
+}
+
+.content__header {
+    font: normal normal normal normal 18px / normal Arial, Helvetica, sans-serif;
+    margin: 20px 0px 9px;
+    padding: 0px 18px;
+}
+
+.content__description {
+    font: normal normal normal normal 14px / 21px Arial, Helvetica, sans-serif;
+    padding: 0px 18px;
+    word-wrap: break-word;
+}
+
+.content__description img {
+    max-width: 100%;
+}
+
+.footer {
+    overflow: hidden;
+    left: 0px;
+    position: absolute;
+    top: 312px;
+    width: 318px;
+}
+
+.categories-container {
+    padding: 7px 0px 0px 10px;
+}
+
+.categories {
+    color: rgb(46, 65, 92);
+    height: 18px;
+    text-align: left;
+    text-overflow: ellipsis;
+    unicode-bidi: isolate;
+    white-space: nowrap;
+    column-rule-color: rgb(46, 65, 92);
+    perspective-origin: 55px 9px;
+    transform-origin: 55px 9px;
+    border: 0px none rgb(46, 65, 92);
+    font: normal normal normal normal 12px / 18px Arial, Helvetica, sans-serif;
+    outline: rgb(46, 65, 92) none 0px;
+    overflow: hidden;
+}
+
+.categories__item {
+    padding: 10px;
+    background-color: aquamarine;
+}
+
         </style>
     </head>
     <body>
-        <h1>{{ .Title }}</h1>
         <section class="feed">
-        {{ range $item := .Feed }}
-            <article>
-                <h2><a href="{{ (index $item.Links 0).Href }}">{{ $item.Title }}</a></h2>
-                <div>{{ $item.Description | html }}</div>
-            </article>
-        {{ end }}
+            <h1>{{ .Title }}</h1>
+            {{ range $item := .Feed }}
+            <div class="item">
+                <div class="content">
+                    <div class="content__pubdate">
+                        {{ $item.ParsedPubDate.Format "Jan 02, 2006" }}
+                    </div>
+                    <div class="content__header">
+                         <a href="{{ (index $item.Links 0) }}">{{ $item.Title }}</a>
+                    </div>
+                    <div class="content__description">
+                        {{ $item.Description | html }}
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="categories-container">
+                        <div class="categories">
+                        {{ range $category := $item.Categories }}
+                         <span class="categories__item">{{ $category.Text }}</span>
+                        {{ end }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ end }}
         </section>
     </body>
 </html>

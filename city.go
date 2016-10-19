@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/viper"
 	"html/template"
 	"net/http"
+	"log"
 )
 
 var (
@@ -19,7 +20,17 @@ var (
 	port        = flag.String("port", "8001", "service port")
 	filepath    = flag.String("config", "./config.yaml", "config file")
 	feedtimeout = flag.Int("timeout", 5, "feed timeout")
+	layout    = flag.String("layout", "feed", "layout template (HTML file without extension)")
 )
+
+type MyFeedItem struct {
+	Title		string
+	PubDate		string
+	Description	string
+	Guid		string
+	Categories	[]string
+	Links		[]string
+}
 
 type Page struct {
 	Title string
@@ -40,7 +51,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	t, _ := template.ParseFiles("feed.html")
+	t, err := template.ParseFiles(*layout + ".html")
+	if err != nil {
+		log.Panic(err)
+	}
 	t.Funcs(funcMap).Execute(w, page)
 }
 
