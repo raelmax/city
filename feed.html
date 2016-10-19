@@ -20,104 +20,42 @@ body {
 }
 
 .item {
-
-    /* bottom: 0px; */
-    /* box-sizing: border-box; */
     color: rgb(46, 65, 92);
     display: inline-block;
     height: 350px;
-    /* left: 0px; */
-    /* max-width: 320px; */
-    /* min-width: 270px; */
     position: relative;
-    /* right: 0px; */
     text-align: left;
-    /* top: 0px; */
-    /* vertical-align: top; */
     width: 320px;
-    /* column-rule-color: rgb(46, 65, 92); */
-    /* perspective-origin: 160px 175px; */
-    /* transform-origin: 160px 175px; */
     background: rgb(254, 254, 254) none repeat scroll 0% 0% / auto padding-box border-box;
     border: 1px solid rgba(46, 65, 92, 0.45098);
     border-radius: 2px 2px 2px 2px;
     font: normal normal normal normal 12px / normal Arial, Helvetica, sans-serif;
     margin: 30px 8.15625px 0px;
-    /* outline: rgb(46, 65, 92) none 0px; */
 }
 
 .content {
-    bottom: 0px;
-    color: rgb(46, 65, 92);
     height: 305px;
-    left: 0px;
-    position: relative;
-    right: 0px;
-    text-align: left;
-    top: 0px;
-    unicode-bidi: isolate;
-    width: 318px;
-    column-rule-color: rgb(46, 65, 92);
-    perspective-origin: 159px 152.5px;
-    transform-origin: 159px 152.5px;
-    border: 0px none rgb(46, 65, 92);
-    font: normal normal normal normal 12px / normal Arial, Helvetica, sans-serif;
-    outline: rgb(46, 65, 92) none 0px;
     overflow: hidden;
 }
 
 .content__pubdate {
-    bottom: 285px;
     color: rgb(130, 141, 157);
-    cursor: default;
-    height: 11px;
     position: absolute;
     right: 13px;
-    text-align: left;
-    text-shadow: rgb(130, 141, 157) 0px 0px 0px;
     top: 9px;
-    column-rule-color: rgb(130, 141, 157);
-    perspective-origin: 6px 5.5px;
-    transform-origin: 6px 5.5px;
-    border: 0px none rgb(130, 141, 157);
     font: normal normal bold normal 10px / normal Arial, Helvetica, sans-serif;
-    outline: rgb(130, 141, 157) none 0px;
 }
 
 .content__header {
-    color: rgb(46, 65, 92);
-    height: 66px;
-    text-align: left;
-    unicode-bidi: isolate;
-    width: 282px;
-    column-rule-color: rgb(46, 65, 92);
-    perspective-origin: 159px 33px;
-    transform-origin: 159px 33px;
-    border: 0px none rgb(46, 65, 92);
     font: normal normal normal normal 18px / normal Arial, Helvetica, sans-serif;
     margin: 20px 0px 9px;
-    outline: rgb(46, 65, 92) none 0px;
     padding: 0px 18px;
 }
 
 .content__description {
-    color: rgb(46, 65, 92);
-    height: 147px;
-    text-align: left;
-    unicode-bidi: isolate;
-    width: 282px;
-    word-break: break-word;
-    column-rule-color: rgb(46, 65, 92);
-    perspective-origin: 159px 73.5px;
-    transform-origin: 159px 73.5px;
-    border: 0px none rgb(46, 65, 92);
     font: normal normal normal normal 14px / 21px Arial, Helvetica, sans-serif;
-    margin: 10px 0px 15px;
-    outline: rgb(46, 65, 92) none 0px;
     padding: 0px 18px;
     word-wrap: break-word;
-    white-space: wrap;
-     text-overflow: ellipsis;
 }
 
 .content__description img {
@@ -126,36 +64,13 @@ body {
 
 .footer {
     overflow: hidden;
-    bottom: 0px;
-    color: rgb(46, 65, 92);
-    height: 33px;
     left: 0px;
-    min-height: 33px;
     position: absolute;
-    right: -8px;
-    text-align: left;
     top: 312px;
     width: 318px;
-    column-rule-color: rgb(46, 65, 92);
-    perspective-origin: 163px 18px;
-    transform-origin: 163px 18px;
-    border: 0px none rgb(46, 65, 92);
-    font: normal normal normal normal 12px / 18px Arial, Helvetica, sans-serif;
-    outline: rgb(46, 65, 92) none 0px;
-    /*padding: 3px 0px 0px 8px;*/
 }
 
 .categories-container {
-    color: rgb(46, 65, 92);
-    float: left;
-    height: 18px;
-    text-align: left;
-    column-rule-color: rgb(46, 65, 92);
-    perspective-origin: 60px 12.5px;
-    transform-origin: 60px 12.5px;
-    border: 0px none rgb(46, 65, 92);
-    font: normal normal normal normal 12px / 18px Arial, Helvetica, sans-serif;
-    outline: rgb(46, 65, 92) none 0px;
     padding: 7px 0px 0px 10px;
 }
 
@@ -189,7 +104,7 @@ body {
             <div class="item">
                 <div class="content">
                     <div class="content__pubdate">
-                        {{ $item.PubDate }}
+                        {{ $item.ParsedPubDate.Format "Jan 02, 2006" }}
                     </div>
                     <div class="content__header">
                          <a href="{{ (index $item.Links 0) }}">{{ $item.Title }}</a>
@@ -202,7 +117,7 @@ body {
                     <div class="categories-container">
                         <div class="categories">
                         {{ range $category := $item.Categories }}
-                         <span class="categories__item">{{ $category }}</span>
+                         <span class="categories__item">{{ $category.Text }}</span>
                         {{ end }}
                         </div>
                     </div>

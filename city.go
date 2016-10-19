@@ -20,6 +20,7 @@ var (
 	port        = flag.String("port", "8001", "service port")
 	filepath    = flag.String("config", "./config.yaml", "config file")
 	feedtimeout = flag.Int("timeout", 5, "feed timeout")
+	layout    = flag.String("layout", "feed", "layout template (HTML file without extension)")
 )
 
 type MyFeedItem struct {
@@ -33,13 +34,8 @@ type MyFeedItem struct {
 
 type Page struct {
 	Title string
-	Feed  []*MyFeedItem
+	Feed  []*rss.Item
 }
-
-//type Page struct {
-//	Title string
-//	Feed  []*rss.Item
-//}
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	feed := []*rss.Item{}
@@ -48,48 +44,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		feed = append(feed, Cache[v])
 	}
 
-	var newFeed []*MyFeedItem
-	for _, f := range(feed) {
-		date, err := f.ParsedPubDate()
-		parsedDate := ""
-		if err == nil {
-			parsedDate = date.Format("2006-02-01")
-		}
-
-		var categories []string
-		for _, cat := range(f.Categories) {
-			if cat.Text != "" {
-				categories = append(categories, cat.Text)
-			}
-		}
-
-		var links []string
-		for _, link := range(f.Links) {
-			links = append(links, link.Href)
-		}
-
-
-		item := MyFeedItem{
-			Title: f.Title,
-			PubDate: parsedDate,
-			Description: f.Description,
-			Guid: *f.Guid,
-			Categories: categories,
-			Links: links,
-		}
-		newFeed = append(newFeed, &item)
-
-		log.Println(item.Title)
-	}
-
-	page := Page{Title: FeedTitle, Feed: newFeed}
+	page := Page{Title: FeedTitle, Feed: feed}
 	funcMap := template.FuncMap{
 		"html": func(value interface{}) template.HTML {
 			return template.HTML(fmt.Sprint(value))
 		},
 	}
 
-	t, err := template.ParseFiles("feed.html")
+	t, err := template.ParseFiles(*layout + ".html")
 	if err != nil {
 		log.Panic(err)
 	}
