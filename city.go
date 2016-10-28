@@ -7,6 +7,10 @@ import (
 	"github.com/spf13/viper"
 	"html/template"
 	"net/http"
+	// "os"
+	"strings"
+	"strconv"
+	"log"
 )
 
 var (
@@ -15,10 +19,9 @@ var (
 	Cache     = make(map[int64]*rss.Item)
 	Index     Int64Slice
 
-	// command line parameters
-	port        = flag.String("port", "8001", "service port")
-	filepath    = flag.String("config", "./config.yaml", "config file")
-	feedtimeout = flag.Int("timeout", 5, "feed timeout")
+	port = "8001"
+	filepath = "./config.yaml"
+	feedtimeout = 5
 )
 
 type Page struct {
@@ -58,16 +61,48 @@ func setConfig(filepath string) {
 
 func spawnFeeds() {
 	for _, feed := range FeedList {
-		go PollFeed(feed, *
-			feedtimeout, nil)
+		go PollFeed(feed, feedtimeout, nil)
+	}
+}
+
+func parseParams() {
+	flag.Parse()
+
+	log.Println(`Usage of ./city:
+	-config string
+		config file (default "./config.yaml")
+	-port string
+		service port (default "8001")
+	-timeout int
+		feed timeout (default 5)
+	example: ./city -config=./myconfig.yaml -port=9091 -timeout=15`)
+
+	for _, f := range(flag.Args()) {
+		if strings.Index(f, "=") > 0 {
+			parts := strings.Split(f, "=")
+			switch parts[0] {
+			case "-port":
+				port = parts[1]
+			case "-config":
+				filepath = parts[1]
+			case "-timeout":
+				var err error
+				feedtimeout, err = strconv.Atoi(parts[1])
+				if err != nil {
+					feedtimeout = 5
+				}
+			}
+		}
 	}
 }
 
 func main() {
-	flag.Parse()
-	setConfig(*filepath)
+	parseParams()
+
+	setConfig(filepath)
 	spawnFeeds()
 
+	log.Printf("City starts with params: config=%s, port=%s, timeout=%v\n", filepath, port, feedtimeout)
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":"+*port, nil)
+	http.ListenAndServe(":"+port, nil)
 }
